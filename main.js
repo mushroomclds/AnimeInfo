@@ -25,7 +25,7 @@ input.addEventListener("keypress", printInput);
 var fetchedResult = "";
 fetchedResult = fetch('https://animechan.vercel.app/api/random')
     .then(response => { return response.json(); })
-    .then(displayResults);
+    .then(displayResults)
 
 
 
@@ -36,9 +36,11 @@ function printInput(evt) {
 }
 
 function displayResults(response) {
+
+    console.log(response);
+
     let result = document.querySelector('.result');
     // var data = JSON.parse(response);
-
     // result.innerText = data.quote;
     result.innerText = `${response.quote}`;
 
