@@ -1,0 +1,11 @@
+#enterAnime {
+    padding-bottom: 5%;
+}
+
+#quote {
+    visibility: hidden;
+}
+
+.quoteOutput {
+    text-decoration: underline;
+}

@@ -4,8 +4,6 @@ const apiUrl = "http://api.anidb.net:9001/httpapi?request=anime&aid=1&output=jso
 
 
 
-
-
 function api() {
     fetch(apiUrl)
         .then(animeData => {
@@ -16,32 +14,37 @@ function api() {
 // api();
 //-------------------------------------------------------------------------------
 
-const input = document.querySelector('.animeInput');
+const animeInput = document.querySelector('.animeInput');
+animeInput.addEventListener("keypress", printInput);
+quotePerson = document.querySelector('.quotePerson');
 
-input.addEventListener("keypress", printInput);
+function displayResults(animeInputVal) {
+    let result = document.querySelector('.result');
+
+    fetchedResult = fetch(`https://animechan.vercel.app/api/random/anime?title=${animeInputVal}`)
+        .then(response => { return response.json(); })
+        .then(response => {
+            result.innerText = `${response.quote}`;
+            quotePerson.innerText = `${response.character}`;
+            console.log(response);
+        });
+
+    // var data = JSON.parse(response);
+    // result.innerText = data.quote;
+}
 
 
-
-var fetchedResult = "";
-fetchedResult = fetch('https://animechan.vercel.app/api/random')
-    .then(response => { return response.json(); })
-    .then(displayResults)
-
-
+quoteOutput = document.querySelector('.quoteOutput');
+showQuote = document.querySelector('#quote');
 
 function printInput(evt) {
     if (evt.keyCode === 13) {
-        console.log(input.value);
+        console.log(animeInput.value);
+        quoteOutput.innerText = animeInput.value;
+        displayResults(animeInput.value);
+        animeInput.value = "";
+        showQuote.style.visibility = "visible";
     }
 }
 
-function displayResults(response) {
 
-    console.log(response);
-
-    let result = document.querySelector('.result');
-    // var data = JSON.parse(response);
-    // result.innerText = data.quote;
-    result.innerText = `${response.quote}`;
-
-}

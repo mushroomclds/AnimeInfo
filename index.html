@@ -16,25 +16,26 @@
 
 <body>
     <header class="jumbotron">
-        <h1>Anime Achieve :O</h1>
+        <h1>Anime Archive :O</h1>
     </header>
 
     <nav>
     </nav>
 
     <div class="container-fluid">
-        <div class="row">
 
-            <div class="col-lg-3 col-md">
+        <div class="row justify-content-md-center">
+            <div class="col-lg-4 col-md" id="enterAnime">
                 Enter anime:
                 <input type="text" class="animeInput" placeholder="Naruto">
             </div>
+        </div>
 
-            <div class="col-lg-9 col-md">
-                Result:
-                <textarea class="result" readonly rows="5" cols="50"></textarea>
+        <div class="row justify-content-md-center">
+            <div class=" col-lg-4 col-md" id="quote">
+                Quote from <span class="quoteOutput"></span> by "<span class="quotePerson"></span>":
+                <p class="result"></p>
             </div>
-
         </div>
     </div>
 
