@@ -44,6 +44,7 @@ async function displayResults(animeInputVal) {
             }
             result.innerText = `${response.quote}`;
             quotePerson.innerText = `${response.character}`;
+            quoteOutput.innerText = `${response.anime}`;
             console.log(response);
         });
     // var data = JSON.parse(response);
@@ -59,7 +60,7 @@ function printInput(evt) {
     if (evt.keyCode === 13 || evt.type === "click") {
         updateProgressBar(30);
         console.log(animeInput.value);
-        quoteOutput.innerText = animeInput.value;
+        // quoteOutput.innerText = animeInput.value;
         displayResults(animeInput.value);
         animeInput.value = "";
         showQuote.style.visibility = "visible";
