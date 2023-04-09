@@ -12,16 +12,85 @@
 // }
 
 // api();
-//-------------------------------------------------------------------------------
+
+const synopsis = document.querySelector('#synopsis');
+const synopsisText = document.querySelector('#synopsisText');
+const resultBox = document.querySelector('.resultBox');
+
+
 const searchButton = document.querySelector('#searchButton');
 const progressBarFill = document.querySelector('#progressBarFill');
 const progressBar = document.querySelector('#progressBar');
-searchButton.addEventListener("click", printInput);
 const animeInput = document.querySelector('#animeInput');
-animeInput.addEventListener("keypress", printInput);
 quotePerson = document.querySelector('.quotePerson');
 quoteOutput = document.querySelector('.quoteOutput');
 showQuote = document.querySelector('#quote');
+animeImage = document.querySelector('#animeImage');
+
+animeInput.addEventListener("keypress", printInput);
+searchButton.addEventListener("click", displayAnimeInfo);
+var searchSuggestionsTitles = [];
+var dataJSON;
+//-------------------------------------------------------------------------------
+
+const options = {
+    method: 'GET',
+    headers: {
+        'X-RapidAPI-Host': 'anime-db.p.rapidapi.com'
+    }
+};
+
+function displayAnimeInfoArray(anime) {
+    i = 0;
+    updateProgressBar(70);
+    while (i < searchSuggestionsTitles.length) {
+        console.log("displayAnimeInfoArray NOT: " + dataJSON[i].title);
+        if (dataJSON[i].title === anime) {
+            synopsisText.innerText = dataJSON[i].synopsis;
+            animeImage.src = dataJSON[i].image;
+            synopsis.style.visibility = "visible";
+            animeImage.style.visibility = "visible";
+            showQuote.style.visibility = "visible";
+            return;
+        }
+        i++;
+    }
+
+}
+
+function displayAnimeInfo(animeInputVal = "") {
+    animeInputVal = animeInput.value;
+    console.log("searching for " + animeInputVal);
+    fetch(`https://anime-db.p.rapidapi.com/anime?page=1&size=10&search=${animeInputVal}`, options)
+        .then(response => response.json()) //returns json file into next "then"
+        .then(response => {
+            dataJSON = response.data;
+            console.log(response);
+            console.log(typeof response.data);
+            var searchSuggestions = response.data;
+            searchSuggestionsTitles = [];
+            i = 0;
+            while (i < searchSuggestions.length) {
+                console.log(searchSuggestions[i]);
+                console.log(searchSuggestions[i].title);
+                searchSuggestionsTitles.push(searchSuggestions[i].title);
+                i++;
+            }
+            i = 0;
+            while (i < searchSuggestionsTitles.length) {
+                console.log(searchSuggestionsTitles[i]);
+                i++;
+            }
+            $('#animeInput').autocomplete({
+                source: searchSuggestionsTitles
+            });
+            console.log("type of searchSuggestions: " + typeof searchSuggestions);
+            console.log("type of searchSuggestionsTitles: " + typeof searchSuggestionsTitles);
+            // synopsis.innerText = response.data[5].synopsis;
+        })
+        .catch(err => console.error(err));
+}
+
 
 function updateProgressBar(progress, toggle = "visible") {
     progressBar.style.visibility = toggle;
@@ -47,21 +116,17 @@ async function displayResults(animeInputVal) {
             quoteOutput.innerText = `${response.anime}`;
             console.log(response);
         });
-    // var data = JSON.parse(response);
-    // result.innerText = data.quote;
-
-    // updateProgressBar(100);
     setTimeout("updateProgressBar(100)", 1000);
-
-
 }
 
 function printInput(evt) {
-    if (evt.keyCode === 13 || evt.type === "click") {
+    // if (evt.keyCode === 13 || evt.type === "click") {
+    if (evt.keyCode === 13) {
         updateProgressBar(30);
         console.log(animeInput.value);
-        // quoteOutput.innerText = animeInput.value;
-        displayResults(animeInput.value);
+        // displayResults(animeInput.value); //dont call quote api for now 
+        // displayAnimeInfo(animeInput.value);
+        displayAnimeInfoArray(animeInput.value);
         animeInput.value = "";
         showQuote.style.visibility = "visible";
         setTimeout("updateProgressBar(100, 'hidden')", 1000);
